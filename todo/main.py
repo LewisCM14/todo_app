@@ -1,6 +1,8 @@
 from typing import Optional
 
 from fastapi import FastAPI
+from config import settings
+
 from todo.models.models import Todo, Todo_Pydantic, ToDoIn_Pydantic
 from pydantic import BaseModel
 from tortoise.contrib.fastapi import HTTPNotFoundError, register_tortoise
@@ -27,7 +29,7 @@ async def create_todo(todo: ToDoIn_Pydantic):
 
 register_tortoise(
     app,
-    db_url="postgres://postgres:password@localhost:5432/fastTodo",
+    db_url=settings.DATABASE_URL,
     modules={'models': ["todo.models.models"]},
     generate_schemas=True,
     add_exception_handlers=True,
