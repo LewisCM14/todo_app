@@ -4,8 +4,8 @@ from tortoise.contrib.pydantic import pydantic_model_creator
 
 class Todo(models.Model):
     """
-    The model to hold the todo items
-    Defining `id` field is optional, it will be defined automatically
+    The model to hold the todo items.
+    Defining `id` field is optional, it will be defined automatically.
     """
     id = fields.IntField(pk=True)
     title = fields.CharField(max_length=255)
