@@ -39,6 +39,14 @@ async def create_todo(todo: TodoIn_Pydantic):
     todo_obj = await Todo.create(**todo.dict(exclude_unset=True))
     return await Todo_Pydantic.from_tortoise_orm(todo_obj)
 
+"""
+PUTS data received in the JSON object into the relevant DB entry via ID.
+Returns the update Todo list
+"""
+@app.put("/todos/{todo_id}", response_model=Todo_Pydantic,  responses={404: {"model": HTTPNotFoundError}})
+async def update_todo(todo_id: int, todo: Todo_Pydantic):
+    await Todo.filter(id=todo_id).update(**todo.dict(exclude={"id"}, exclude_unset=True))
+    return await Todo_Pydantic.from_queryset_single(Todo.get(id=todo_id))
 
 register_tortoise(
     app,
