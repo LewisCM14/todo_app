@@ -17,15 +17,22 @@ async def read_root():
     return {"Hello": "World"}
 
 """
-using the todo model return a list of all items asynchronously
+GET a list of items asynchronously from the Todo model.
 """
 @app.get('/todos', response_model=List[Todo_Pydantic])
 async def get_todos():
     return await Todo_Pydantic.from_queryset(Todo.all())
 
 """
-set the url and model for post request
-async create the todo object and await from orm
+GET specific items from the Todo model via ID.
+Triggers 404 error if request invalid.
+"""
+@app.get("/todos/{todo_id}", response_model=Todo_Pydantic, responses={404: {"model": HTTPNotFoundError}})
+async def get_todo(todo_id: int):
+    return await Todo_Pydantic.from_queryset_single(Todo.get(id = todo_id))
+
+"""
+POST JSON objects to the Todo model asynchronously via tortoise orm
 """
 @app.post("/todos", response_model=Todo_Pydantic)
 async def create_todo(todo: TodoIn_Pydantic):
